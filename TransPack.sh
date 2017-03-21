@@ -18,9 +18,9 @@ Website="http://b00merang.weebly.com"
 # --- Misc functions to simplify programming ---
 # DOWNLOAD A FILE AND SHOW A PROGRESS
 download() {
-				wget $1 -q --show-progress
-				file="$(basename $1)"
-				mv "$file" $2 }
+		wget $1 -q --show-progress
+		file="$(basename $1)"
+		mv "$file" $2 }
 # COLOR OF THE TERMINAL
 # keep colors here in array to facilitate stuff
 color() {
@@ -29,83 +29,66 @@ color() {
 	found=false
 	for f in "${!colors[@]}"
  	do
-		if [ "$1" == "${colors[$f]}" ]; then
-		tput setaf $f
-   		found=true
+		if [ "$1" == "${colors[$f]}" ]; 
+		then
+			tput setaf $f
+   			found=true
   		fi
  	done
-
- if [ "$found" = true ]; then
-  log 'Wrong color number'
- fi
-
-}
-
-output() {
- echo "$1: $2" | tee -a "$LOG"
-}
-
-log() {
- echo "$1" >> "$LOG"
-}
+	if [ "$found" = true ]; 
+	then
+  		log 'Wrong color number'
+ 		fi }
+output() { echo "$1: $2" | tee -a "$LOG" }
+log() {	echo "$1" >> "$LOG" }
 
 # --- Verification and integrity functions ---
-
-check_bash() {
-
- bash_v="$(echo "$BASH_VERSION" | cut -c1-1)" # since we need bash 4.x, get first name
-
- if [ "$bash_v" -lt 4 ]; then
-  color red
-  output "GNU Bash 4.0 or higher is needed to execute this script correctly. You have $BASH_VERSION"
-  exit # Useless to continue execution
- else
-  color green
-  output "GNU Bash is compatible: $BASH_VERSION"
- fi
-
-}
-
+# CHECK BASH VERSION
+check_bash() { bash_v="$(echo "$BASH_VERSION" | cut -c1-1)" # since we need bash 4.x, get first name
+	if [ "$bash_v" -lt 4 ]; 
+	then
+		color red
+  		output "GNU Bash 4.0 or higher is needed to execute this script correctly. You have $BASH_VERSION"
+  		exit # Useless to continue execution
+ 	else
+  		color green
+  		output "GNU Bash is compatible: $BASH_VERSION"
+ 		fi }
+# CHECK IF THE CONNECTION EXIST
 check_connection() {
-
- if [ "$check_net" = true ]; then
-
-   echo -e "GET http://github.com HTTP/1.0\n\n" | nc github.com 80 > /dev/null 2>&1
-
-   # If there is any value > 0 in ? variable
-   if [ $? -eq 0 ]; then
-    color green
-    output "Internet connection detected"
-    color white
-   else
-    color red
-    output "Internet connection needed. Please connect and retry"
-    exit
-   fi
- else
-  log 'Check_connection was disabled for this run'
- fi
-
-}
-
+	if [ "$check_net" = true ]; then
+	echo -e "GET http://github.com HTTP/1.0\n\n" | nc github.com 80 > /dev/null 2>&1 # WHY NOT USING /TMP/ ?
+	# If there is any value > 0 in ? variable
+   	if [ $? -eq 0 ];
+	then
+		color green
+    		output "Internet connection detected"
+    		color white #WHY NOT GREEN?
+   	else
+		color red
+    		output "Internet connection needed. Please connect and retry"
+    		exit
+   		fi
+ 	else
+  		log 'Check_connection was disabled for this run'
+ 		fi }
+# CHECK DEPENDENCIES
 check_dependencies() {
-
-  # xprop
-  if [ -a /usr/bin/xprop ]; then
-   log "xprop is installed. Proceding..."
-  else
-   color red
-   output "Xprop is needed to detect your DE. Please install it or use manual DE override to install this theme (-h to see help)"
-  fi
-
-  # netcat (nc)
-  if [ -a /bin/nc ]; then
-   log "netcat is installed. Proceding..."
-  else
-   output "Netcat is needed to test your internet connection. Please install it or use no-check mode (-h to see help)"
-  fi
-
-}
+	# XPROP
+  	if [ -a /usr/bin/xprop ];
+  	then
+		log "xprop is installed. Proceding..."
+  	else
+		color red
+   		output "Xprop is needed to detect your DE. Please install it or use manual DE override to install this theme (-h to see help)"
+  		fi
+  	# NETCAT (NC)
+  	if [ -a /bin/nc ];
+	then
+		log "netcat is installed. Proceding..."
+	else
+		output "Netcat is needed to test your internet connection. Please install it or use no-check mode (-h to see help)"
+  	fi }
 
 verify() {
   
