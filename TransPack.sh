@@ -2,48 +2,38 @@
 
 # Software variables
 version="R7.1"
-
 LOG="$PWD/install.log"
 path="/usr/share/themes"
 t2path="/usr/share/tint2"
 iconpath="/usr/share/icons"
 stylepath="/usr/share/styles"
-
 theme_name="Windows 10 Light"
 icon_theme="Windows 10 Icons"
-
 WM="Unknown"
 DE="Unknown"
-
 check_net=true
 testing=false
-
 Website="http://b00merang.weebly.com"
-
+# MISC FUNCTIONS
 # --- Misc functions to simplify programming ---
+# DOWNLOAD A FILE AND SHOW A PROGRESS
 download() {
-
- wget $1 -q --show-progress
-
- file="$(basename $1)"
- mv "$file" $2
-
-}
-
+				wget $1 -q --show-progress
+				file="$(basename $1)"
+				mv "$file" $2 }
+# COLOR OF THE TERMINAL
+# keep colors here in array to facilitate stuff
 color() {
-
- # keep colors here in array to facilitate stuff
- declare -a colors
- colors=( black red green yellow blue magenta cyan white gray )
- found=false
-
- for f in "${!colors[@]}"
- do
-  if [ "$1" == "${colors[$f]}" ]; then
-   tput setaf $f
-   found=true
-  fi
- done
+	declare -a colors
+	colors=( black red green yellow blue magenta cyan white gray )
+	found=false
+	for f in "${!colors[@]}"
+ 	do
+		if [ "$1" == "${colors[$f]}" ]; then
+		tput setaf $f
+   		found=true
+  		fi
+ 	done
 
  if [ "$found" = true ]; then
   log 'Wrong color number'
